@@ -1,7 +1,7 @@
 // https://material.io/guidelines/layout/responsive-ui.html#responsive-ui-grid
 void setup() {
   size(displayWidth, displayHeight); // displayWidth and displayHeight are deprecated, however I don't like fullscreen so I'll just use this
-  surface.setResizable(true); // Going to do bad things if you were able to resize the window
+  surface.setResizable(true);
 }
 
 void draw() {
