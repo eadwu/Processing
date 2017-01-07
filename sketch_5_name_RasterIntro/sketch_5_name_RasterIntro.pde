@@ -20,46 +20,32 @@
  * parseOperation was made with reference to http://stackoverflow.com/questions/4662215/how-to-extract-a-substring-using-regex
  */
 
-import java.util.regex.Pattern; // Importing java class
+import java.util.regex.Pattern; // Importing java library
 import java.util.regex.Matcher;
 
 int padding = 20; // Constant spacing between the images
-
-float r, g, b;
 PImage i, im, ima, imag, image;
-
 /**
- * A function for the loops
- * @param int     base      The base number of pixel displacement
- * @param boolean condition This was for the west puzzle
- * @param String  rp        Number to multiply on the red value of the pixel's rgb value
- * @param String  gp        Number to multiply on the green value of the pixel's rgb value
- * @param String  bp        Number to multiply on the blue value of the pixel's rgb value
- * @param int     srow      The starting row of the image
- * @param int     erow      The final row of the image
- * @param int     irow      The increment of the row
- * @param int     spix      The starting pixel of the row
- * @param int     epix      The ending pixel of the row
- * @param int     ipix      The increment of the pixel
+ * A function for most of the loops.
+ * @param int   base The base pixel displacement
+ * @param color cp   Color multiplier
+ * @param int   srow Initial value of row
+ * @param int   erow Final value of row
+ * @param int   irow Increment of row
+ * @param int   spix Initial value of pixel
+ * @param int   epix End value of pixel
+ * @param int   ipix Increment of pixel
  */
-void loop(int base, boolean condition, int rp, int gp, int bp, int srow, int erow, int irow, int spix, int epix, int ipix) {
+void loop(int base, color cp, int srow, int erow, int irow, int spix, int epix, int ipix) {
   for (int row = srow; row < erow; row += irow) {
     for (int pixel = spix; pixel < epix; pixel += ipix) {
       int num = base + row * width + pixel;
 
-      if (condition && blue(pixels[num]) < 16) {
-        pixels[num] = color(
-          blue(pixels[num]) * 16,
-          0,
-          0
-        );
-      } else {
-        pixels[num] = color(
-          red(pixels[num]) * rp,
-          green(pixels[num]) * gp,
-          blue(pixels[num]) * bp
-        );
-      }
+      pixels[num] = color(
+        red(pixels[num]) * red(cp),
+        green(pixels[num]) * green(cp),
+        blue(pixels[num]) * blue(cp)
+      );
     }
   }
 }
@@ -82,11 +68,40 @@ void draw() {
   image(image, i.width + padding * 2 + im.width, ima.height + padding);
   loadPixels();
 
-  loop(0, false, 1, 1 / 2, 1, 0, i.height, 1, 1, i.width, 2);
-  loop(i.width + padding, false, 0, 0, 0, 0, im.height, 1, im.width / 2, im.width / 2 + 1, 1);
-  loop(i.width + im.width + padding * 2, false, 10, 0, 0, 0, ima.height, 1, 0, ima.width, 1);
-  loop(width * (im.height + padding), true, 0, 0, 0, 0, imag.height, 1, 0, imag.width, 1);
-  loop((width * (ima.height + padding)) + i.width + padding * 2 + im.width, false, 0, 20, 20, 0, image.height, 1, 0, image.width, 1);
+  for (int row = 0; row < i.height; row++) {
+    for (int pixel = 0; pixel < i.width; pixel++) {
+      int num = row * width + pixel;
+
+      if (num % 2 == 1) { // Condition prevents me from using loop()
+        pixels[num] = color(
+          red(pixels[num]),
+          green(pixels[num]) / 2,
+          blue(pixels[num])
+        );
+      }
+    }
+  }
+
+  loop(i.width + padding, color(0, 0, 0), 0, im.height, 1, im.width / 2, im.width / 2 + 1, 1);
+  loop(i.width + im.width + padding * 2, color(10, 0, 0), 0, ima.height, 1, 0, ima.width, 1);
+
+  for (int row = 0; row < imag.height; row++) {
+    for (int pixel = 0; pixel < imag.width; pixel++) {
+      int num = (width * (im.height + padding)) + row * width + pixel;
+
+      if (blue(pixels[num]) < 16) { // Condition prevents me from using loop()
+        pixels[num] = color(
+          blue(pixels[num]) * 16,
+          0,
+          0
+        );
+      } else {
+        pixels[num] = color(0, 0, 0);
+      }
+    }
+  }
+
+  loop((width * (ima.height + padding)) + i.width + padding * 2 + im.width, color(0, 20, 20), 0, image.height, 1, 0, image.width, 1);
 
   updatePixels();
 }
