@@ -16,8 +16,6 @@
  * 1/7/17
 
  * Follows the criteria for the program. Has the 3 puzzles and 2 assignments. Uses math to calculate the individual image pixels.
- * Assignment link:
- * parseOperation was made with reference to http://stackoverflow.com/questions/4662215/how-to-extract-a-substring-using-regex
  */
 
 import java.util.regex.Pattern; // Importing java library
