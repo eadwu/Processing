@@ -17,10 +17,6 @@
 
  * Follows the criteria for the program. Has the 3 puzzles and 2 assignments. Uses math to calculate the individual image pixels.
  */
-
-import java.util.regex.Pattern; // Importing java library
-import java.util.regex.Matcher;
-
 int padding = 20; // Constant spacing between the images
 PImage i, im, ima, imag, image;
 /**
